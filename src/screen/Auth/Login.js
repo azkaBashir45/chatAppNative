@@ -12,7 +12,8 @@ import loginBg from '../../Images/loginBg.png';
 import Logo from '../../Images/Logo.png';
 import Landing from '../../Images/Landing.png';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Actions } from 'react-native-router-flux';
+// import { Actions } from 'react-native-router-flux';
+import Register from "./Register";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -104,8 +105,8 @@ class Login extends Component {
                     styles.Buttons,
                     styles.question,
                   ]}>
-                  <Text style={styles.do}>Do you have an account?</Text>
-                  <TouchableOpacity
+                  <Text style={styles.do}>Do you not have an account?</Text>
+                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('register')}
                     style={[styles.do]}
                    >
                     <Text
