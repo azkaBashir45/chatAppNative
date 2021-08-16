@@ -95,6 +95,7 @@ class Login extends Component {
                   <Button
                     block
                     style={styles.btnGrp}
+                    onPress={()=>this.props.navigation.navigate('Chatroom')}
                    >
                     <Text style={styles.btnText}>Login</Text>
                   </Button>
