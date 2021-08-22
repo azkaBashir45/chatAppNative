@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
 // import { Router,Scene } from 'react-native-router-flux';
-import AnimatedScreen from "./AnimatedScreen";
+import Animatedscreen from "./AnimatedScreen";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Auth from "./Auth";
 import Chatroom from "./chatroom";
-import Login from "./Auth/Login";
-import Register from "./Auth/Register";
+import Login from './Auth/Login';
+import Register from './Auth/Register';
 const Stack = createStackNavigator();
 class LoadingScreen extends Component {
   constructor(props) {
@@ -20,11 +20,11 @@ class LoadingScreen extends Component {
     return (
       <NavigationContainer   >
       <Stack.Navigator>
-        {/* <Stack.Screen
+        <Stack.Screen
         initial={true}
         options={{headerShown: false}}
-        key="loading" name="loading" component={AnimatedScreen} /> */}
-        <Stack.Screen
+        key="loading" name="loading" component={Animatedscreen} />
+         <Stack.Screen
         initial={true}
         options={{headerShown: false}}
         key="login" name="login" component={Login} />

@@ -1,139 +1,206 @@
-import React, { Component } from 'react';
-import { Image, StyleSheet, ImageBackground, Animated } from 'react-native';
-import { View, Text, Form, Item, Input, Button, NativeBaseProvider, FormControl } from 'native-base';
+import React, {Component} from 'react';
+import {Image, StyleSheet, ImageBackground, Animated} from 'react-native';
+import {View, Text, Form, Item, Input, Button} from 'native-base';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Fontiso from 'react-native-vector-icons/Fontisto';
 import MatCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 /** Image */
 import loginBg from '../../Images/loginBg.png';
 import Logo from '../../Images/Logo.png';
 import Landing from '../../Images/Landing.png';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-// import { Actions } from 'react-native-router-flux';
-import Register from "./Register";
-class Login extends Component {
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Actions} from 'react-native-router-flux';
+
+/** Actions */
+import {register} from '../../store/actions/authActions';
+
+class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      logoAnim: new Animated.Value(0),
+      logoAnime: new Animated.Value(0),
+      form: {
+        email: {value: ''},
+        password: {value: ''},
+        name: {value: ''},
+        cpassword: {value: ''},
+      },
     };
   }
+
   componentDidMount() {
     Animated.parallel([
-      Animated.spring(this.state.logoAnim, {
+      Animated.spring(this.state.logoAnime, {
         toValue: 1,
         tension: 2,
         friction: 1,
         duration: 1000,
-                                                                                                                                                                                                               
-      }).start()
+      }).start(),
     ]);
   }
+
+  updateInput = (name, text) => {
+    let formCopy = this.state.form;
+
+    formCopy[name].value = text;
+
+    this.setState({
+      form: formCopy,
+    });
+  };
+
+  submitUser = () => {
+    const {form} = this.state;
+    let formToSubmit = {};
+
+    let formCopy = form;
+
+    for (let key in formCopy) {
+      formToSubmit[key] = formCopy[key].value;
+    }
+
+    const {email, password} = formToSubmit;
+
+    if (!email || !password) {
+      return alert('Fill all credentials');
+    } else {
+      this.props.register(formToSubmit);
+    }
+  };
+
   render() {
     return (
-      <NativeBaseProvider>
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <ImageBackground source={loginBg}
-              style={{ width: '100%', height: '100%', flex: 1 }}
-              resizeMode={'stretch'}>
-              <View style={styles.top}>
-                <Image source={Landing} style={styles.landing}></Image>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          {/* First */}
+          <ImageBackground
+            source={loginBg}
+            style={{width: '100%', height: '100%', flex: 1}}
+            resizeMode="cover">
+            <View style={styles.top}>
+              <Image source={Landing} style={styles.landing} />
+            </View>
+
+            {/* Last */}
+            <View style={styles.middle}>
+              <View style={styles.register}>
+                <TouchableOpacity style={styles.regText}>
+                  <Text style={styles.regText}>Register</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.regText}>
+                  <Text style={styles.regText}>
+                    <AntDesign name="right" />
+                  </Text>
+                </TouchableOpacity>
               </View>
-              {/* Last */}
-              <View style={styles.middle}>
-                <View style={styles.register}>
-                  <TouchableOpacity style={styles.regText}>
-                    <Text style={styles.regText}>Login</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.regText}>
-                    <Text style={styles.regText}>
-                      <AntDesign name="right" />
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                {/* Form area */}
 
-                <View style={styles.formArea}>
-                  <Animated.View
-                    style={[
-                      {
-                        opacity: this.state.logoAnim,
-                        top: this.state.logoAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [-2, 0],
-                        }),
-                      },
-                      {
-                        alignItems: 'center',
-                      },
-                    ]}>
-                    <Image source={Logo} />
-                    <View style={{ flex: 1, width: '100%', alignItems: 'center' }}>
+              {/* Form area */}
 
-                      <FormControl style={styles.mainForm}>
-                       <View style={[styles.formItems,{flexDirection:'row'}]}>
-                       {/* <Icon name="comments" size={30} color="#900" />  */}
-                         <Fontiso name="email" style={[styles.Icon,{top:20}]} />  
-                        <Input  placeholder="E-mail"
-                          style={[styles.Input]} />
-                          </View>
-                          <View style={styles.formItems}>
-                        <Input  placeholder="Password"
-                          style={styles.Input} />
-                      </View>
-                      <View style={styles.formItems}>
-                        <Input  placeholder="Confirm Password"
-                          style={styles.Input} />
-                      </View>
-                      <View style={styles.formItems}>
-                        <Input  placeholder="Password"
-                          style={styles.Input} />
-                      </View>
-                     
-                      </FormControl>
+              <View style={styles.formArea}>
+                <Animated.View
+                  style={[
+                    {
+                      opacity: this.state.logoAnime,
+                      top: this.state.logoAnime.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [5, 0],
+                      }),
+                    },
+                    {
+                      alignSelf: 'center',
+                    },
+                  ]}>
+                  <Image source={Logo} />
+                </Animated.View>
 
-                    </View>
-                  </Animated.View>
-                  <Animated.View
-                  style={[{opacity:this.state.logoAnime}, styles.Buttons]}>
+                <Animated.View
+                  style={[
+                    {
+                      opacity: this.state.logoAnime,
+                      left: this.state.logoAnime.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [-2, 0],
+                      }),
+                    },
+                  ]}>
+                  <View style={{flex: 1, width: '100%', alignSelf: 'center'}}>
+                    <Form style={styles.mainForm}>
+                      <Item style={styles.formItems}>
+                        <Entypo name="user" style={styles.Icon} />
+                        <Input
+                          placeholder="Full name"
+                          style={styles.Input}
+                        />
+                      </Item>
+                      <Item style={styles.formItems}>
+                        <Fontiso name="email" style={styles.Icon} />
+                        <Input
+                          placeholder="E-mail"
+                          style={styles.Input}
+                        />
+                      </Item>
+                      <Item style={styles.formItems}>
+                        <MatCIcon name="lock" style={styles.Icon} />
+                        <Input
+                          placeholder="Password"
+                          style={styles.Input}
+                         
+                        />
+                      </Item>
+                      <Item style={styles.formItems}>
+                        <MatCIcon name="lock" style={styles.Icon} />
+                        <Input
+                          placeholder="Confirm Password"
+                          style={styles.Input}
+                        />
+                      </Item>
+                    </Form>
+                  </View>
+                </Animated.View>
+
+                <Animated.View
+                  style={[{opacity: this.state.logoAnime}, styles.Buttons]}>
                   <Button
                     block
                     style={styles.btnGrp}
-                   >
-                    <Text style={styles.btnText}>Login</Text>
+                    onPress={()=>this.props.navigation.navigate('login')}>
+                    <Text style={styles.btnText}>Register</Text>
                   </Button>
                 </Animated.View>
+
                 <Animated.View
                   style={[
-                    {opacity:this.state.logoAnime},
+                    {opacity: this.state.logoAnime},
                     styles.Buttons,
                     styles.question,
                   ]}>
-                  <Text style={styles.do}>Do you have an account?</Text>
-                  <TouchableOpacity onPress={()=>this.props.navigation.navigate('login')}
+                  <Text style={styles.do}>Do you have an account</Text>
+                  <TouchableOpacity
                     style={[styles.do]}
+                    onPress={()=>this.props.navigation.navigate('login')}
                    >
                     <Text
                       style={[styles.do, {color: '#29AFA0', marginLeft: 15}]}>
-                      Sigin
+                      Signin
                     </Text>
                   </TouchableOpacity>
                 </Animated.View>
-                </View>
               </View>
-            </ImageBackground>
-          </View>
+            </View>
+            {/* Second */}
+            <View style={styles.bottom}></View>
+          </ImageBackground>
         </View>
-      </NativeBaseProvider>
+      </View>
     );
   }
 }
 
-export default Login;
+export default Register;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -153,9 +220,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   landing: {
-    height: 150,
-    width: 150,
-    marginTop: 15.5,
+    height: 170,
+    width: 170,
+    marginTop: 49.5,
   },
   bottom: {
     position: 'relative',
@@ -189,7 +256,7 @@ const styles = StyleSheet.create({
     color: '#E85B1C',
   },
   formArea: {
-    marginTop: 103,
+    marginTop: 100,
     paddingLeft: 29.9,
     paddingRight: 29.9,
     width: '100%',
@@ -205,14 +272,13 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   mainForm: {
-    marginTop: 5,
+    marginTop: 20,
   },
   formItems: {
     marginTop: 15,
-    // borderWidth: 0.5,
-    // borderColor: '#29AFA0',
-    // borderRadius: 10,
-    // flexDirection:'row'
+    borderWidth: 0.5,
+    borderColor: '#29AFA0',
+    borderRadius: 10,
   },
   Input: {
     fontFamily: 'Cairo-Bold',
@@ -249,3 +315,42 @@ const styles = StyleSheet.create({
   },
 });
 
+// <View style={{flex: 1, width: '100%', alignSelf: 'center'}}>
+//   <Form style={styles.mainForm}>
+//     <Item style={styles.formItems}>
+//       <Entypo name="user" style={styles.Icon} />
+//       <Input
+//         placeholder="Full name"
+//         onChangeText={text => this.updateInput('name', text)}
+//         style={styles.Input}
+//       />
+//     </Item>
+//     <Item style={styles.formItems}>
+//       <Fontiso name="email" style={styles.Icon} />
+//       <Input
+//         placeholder="E-mail"
+//         style={styles.Input}
+//         onChangeText={text => this.updateInput('email', text)}
+//       />
+//     </Item>
+//     <Item style={styles.formItems}>
+//       <MatCIcon name="textbox-password" style={styles.Icon} />
+//       <Input
+//         placeholder="Password"
+//         style={styles.Input}
+//         onChangeText={text =>
+//           this.updateInput('password', text)
+//         }
+//       />
+//     </Item>
+//     <Item style={styles.formItems}>
+//       <MatCIcon name="textbox-password" style={styles.Icon} />
+//       <Input
+//         placeholder="Confirm Password"
+//         style={styles.Input}
+//         onChangeText={text =>
+//           this.updateInput('cpassword', text)
+//         }
+//       />
+//     </Item>
+//   </Form>

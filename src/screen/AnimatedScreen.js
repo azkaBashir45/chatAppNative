@@ -1,101 +1,99 @@
-import React, { Component } from 'react';
-import { Animated,StyleSheet,Image } from 'react-native';
-import { Container,Content,Text ,View,Spinner,NativeBaseProvider,Center} from 'native-base';
+import React, {Component} from 'react';
+import {StyleSheet, Animated, Image} from 'react-native';
+import {Container, Content, Text, View, Spinner} from 'native-base';
 
-// *****
-//  @images
-// **
-import Logo from "./../Images/Logo.png";
-import Landing from "./../Images/Landing.png";
-import { bottom, opacity } from 'styled-system';
+/**
+ * @images
+ */
+import Logo from '../Images/Logo.png';
+import Landing from '../Images/Landing.png';
 
-class AnimatedScreen extends Component {
+/** Actions */
+// import {Actions} from 'react-native-router-flux';
+// import AsyncStorage from '@react-native-community/async-storage';
+
+export default class AnimateScene extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      LogoAnim:new Animated.Value(0),
-      LandingAnim:new Animated.Value(0),
-      lSpiner:new Animated.Value(0)
+      LogoAnime: new Animated.Value(0),
+      LandingAnime: new Animated.Value(0),
+      lSpinner: new Animated.Value(0),
     };
   }
 
-  componentDidMount(){
-    const {LogoAnim,LandingAnim,lSpiner}=this.state;
-    Animated.parallel([
-      Animated.spring(LogoAnim,{
-        toValue:1,
-        tension:10,
-        friction:2,
-        duration:7000,
-      }).start(),
+  componentDidMount() {
+    const {LogoAnime, LandingAnime, lSpinner} = this.state;
+    // const user = JSON.parse(await AsyncStorage.getItem('@user'));
 
-      Animated.timing(LandingAnim,{
-        toValue:1,
-        duration:900,
-      }).start(()=>{
-        Animated.spring(lSpiner,{
-          toValue:1,
-          tension:10,
-          duration:3000,
-        }).start();
-    
-      })
+    Animated.parallel([
+      Animated.spring(LogoAnime, {
+        toValue: 1,
+        tension: 10,
+        friction: 1,
+        duration: 700,
+      }).start(),
+      Animated.timing(LandingAnime, {
+        toValue: 1,
+        duration: 900,
+      }).start(() => {
+        Animated.spring(lSpinner, {
+          toValue: 1,
+          tension: 10,
+          duration: 3000,
+        }).start(() => {
+         this.props.navigation.navigate('login')
+        });
+      }),
     ]).start();
   }
   render() {
-    const {LogoAnim,LandingAnim,lSpiner}=this.state;
+    const {LogoAnime, LandingAnime, lSpinner} = this.state;
     return (
-      <NativeBaseProvider>
-      <Container>
-        <View style={styles.content}>
-      <Animated.View
-       style={[
-         {
-           opacity:LogoAnim,
-           top:LogoAnim.interpolate({
-             inputRange:[0,1],
-             outputRange:[1,0],
-           }),
-           left:LogoAnim.interpolate({
-             inputRange:[0,1],
-             outputRange:[-10,0]
-           })
-         },styles.logoTop
-       ]}
-       >
-  
-        <Image source={Logo}></Image>
-        </Animated.View>
-        <Animated.View style={[{opacity:LandingAnim},styles.Landing]}>
-        <Image source={Landing}></Image>
-        </Animated.View>
-        <Animated.View  style={[
-          {
-            opacity:lSpiner,
-            bottom:lSpiner.interpolate({
-              inputRange:[0,1],
-              outputRange:[-20,0]
-            })
-             
-          }, styles.Spinner,
-          ]}>
-        <Spinner color="#29AFA0">
+      <Container style={styles.container}>
+        <Content style={styles.content}>
+          <Animated.View
+            style={[
+              {
+                opacity: LogoAnime,
+                top: LogoAnime.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                }),
+                left: LogoAnime.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [-10, 0],
+                }),
+              },
+              styles.logoTop,
+            ]}>
+            <Image source={Logo} />
+          </Animated.View>
 
-        </Spinner>
-        </Animated.View>
-        </View>
+          <Animated.View style={[{opacity: LandingAnime}, styles.Landing]}>
+            <Image source={Landing} />
+          </Animated.View>
+
+          <Animated.View
+            style={[
+              {
+                opacity: lSpinner,
+                bottom: lSpinner.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [-20, 0],
+                }),
+              },
+              styles.Spinner,
+            ]}>
+            <Spinner color="#29AFA0" />
+          </Animated.View>
+        </Content>
       </Container>
-      </NativeBaseProvider>
-    //  <Container style={styles.container}>
-    //    <Content>
-    //      <Animated.View>
-    //        <Image source={Logo}></Image>
-    //      </Animated.View>
-    //    </Content>
-    //  </Container>
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -108,16 +106,15 @@ const styles = StyleSheet.create({
   },
   logoTop: {
     marginBottom: 20,
-    marginTop: 50,
+    marginTop: 70,
     alignItems: 'center',
   },
   Landing: {
-    marginTop: 90,
+    marginTop: 55,
     alignItems: 'center',
   },
   Spinner: {
-   marginTop:350,
+    marginTop: 50,
     alignItems: 'center',
   },
-})
-export default AnimatedScreen;
+});
